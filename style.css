@@ -53,6 +53,27 @@ footer { padding-bottom: 20px; background: #1a2027; }
     background: #2c3e50; border: none; color: #fff; border-radius: 12px;
     width: 18%; padding: 8px 0; font-size: 9px; cursor: pointer;
 }
+/* Adicione ao seu style.css existente */
+.btn-opt {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-opt:active { background: #34495e; }
+
+/* Para a lista de ativos não bugar */
+#m-content {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
 
 .btn-age-container { text-align: center; width: 22%; }
 .btn-age {
