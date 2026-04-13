@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BitLife Brasil</title>
+    <title>BitLife Brasil Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,24 +18,21 @@
             <h1 id="v-money">R$ 0</h1>
         </header>
 
-        <main id="event-log">
-            </main>
+        <main id="event-log"></main>
 
         <footer>
             <div class="player-info">
                 <span id="v-name">---</span> | <span id="v-age">0 anos</span>
             </div>
             <nav class="main-menu">
-                <button onclick="abrir('assets')">📂<br>ATIVOS</button>
-                <button onclick="abrir('jobs')">💼<br>OCUPAÇÃO</button>
-                
+                <button onclick="abrirAtivos()">📂<br>ATIVOS</button>
+                <button onclick="abrirJobs()">💼<br>OCUPAÇÃO</button>
                 <div class="btn-age-container">
                     <button class="btn-age" onclick="envelhecer()">+</button>
                     <small>ENVELHECER</small>
                 </div>
-
-                <button onclick="abrir('social')">👥<br>SOCIAL</button>
-                <button onclick="abrir('activities')">🎬<br>ATIVIDADES</button>
+                <button onclick="abrirSocial()">👥<br>SOCIAL</button>
+                <button onclick="abrirAtividades()">🎬<br>ATIVIDADES</button>
             </nav>
         </footer>
     </div>
@@ -47,7 +44,6 @@
             <button class="btn-close" onclick="fecharModal()">VOLTAR</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
