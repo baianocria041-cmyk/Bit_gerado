@@ -79,6 +79,103 @@ function update() {
     document.getElementById('bar-looks').style.width = p.stats.apa + "%";
     document.getElementById('bar-grades').style.width = p.stats.notas + "%";
 }
+// --- FUNÇÃO DE MODAL COM BOTÃO VOLTAR ---
+function abrirModal(t, b, mostrarVoltar = false) {
+    const modal = document.getElementById('modal');
+    const title = document.getElementById('modal-title');
+    const body = document.getElementById('m-body');
+    
+    modal.style.display = 'flex';
+    title.innerText = t;
+    
+    // Se mostrarVoltar for true, adiciona o botão no topo do conteúdo
+    let conteudoFinal = "";
+    if (mostrarVoltar) {
+        conteudoFinal += `<button class="back-btn" onclick="voltarMenuPrincipal('${t}')">⬅ Voltar</button>`;
+    }
+    conteudoFinal += b;
+    
+    body.innerHTML = conteudoFinal;
+    // Reseta o scroll para o topo sempre que abrir
+    body.scrollTop = 0;
+}
+
+// Lógica para o botão de voltar saber para onde ir
+function voltarMenuPrincipal(contextoAtual) {
+    // Se estiver em um sub-menu (como lista de empregos ou redes específicas), volta para o menu pai
+    if (contextoAtual === "MERCADO" || contextoAtual === "CARREIRA") {
+        abrirOcupacao();
+    } else if (contextoAtual === "INSTAGRAM" || contextoAtual === "TIKTOK" || contextoAtual === "UNIVERSIDADE") {
+        abrirAtividades();
+    } else {
+        fecharModal();
+    }
+}
+
+// --- ATUALIZAÇÃO DA LISTA DE EMPREGOS (SCROLLÁVEL) ---
+function abrirOcupacao() {
+    if (p.idade < 18) {
+        return abrirModal("ESCOLA", `
+            <p>Seu desempenho escolar: <b>${p.stats.notas}%</b></p>
+            <button class="btn-choice" onclick="playMiniGame('Estudo')">📖 Estudar Muito</button>
+        `);
+    }
+    
+    if (p.job) {
+        abrirModal("CARREIRA", `
+            <div style="text-align:center; padding: 10px;">
+                <span style="font-size: 3rem;">${p.job.e}</span>
+                <h3>${p.job.n}</h3>
+                <p>Salário: <span style="color:#4cd137">R$ ${p.job.s}</span></p>
+            </div>
+            <button class="btn-choice" onclick="playMiniGame('Trabalho')">🔨 Esforçar-se no Trabalho</button>
+            <button class="btn-choice" style="color:#e84118" onclick="faltarTrabalho()">🚫 Faltar ao Trabalho</button>
+            <button class="btn-choice" onclick="demissao()">🚪 Pedir Demissão</button>
+        `);
+    } else {
+        let h = `<p style="font-size:0.8rem; color:#888; margin-bottom:10px;">Arraste para ver mais vagas 👇</p>`;
+        
+        // Ordena por salário para ficar organizado
+        const jobsOrdenados = DB_JOBS.sort((a, b) => a.s - b.s);
+
+        jobsOrdenados.forEach(j => {
+            let block = (j.rFac && !p.faculdade.includes(j.rFac)) || p.stats.int < (j.rInt || 0);
+            let reqMsg = block ? `<br><small style="color:#e84118">Requisito não atingido</small>` : "";
+            
+            h += `
+            <button class="btn-choice" style="opacity:${block?0.5:1}; text-align:left;" onclick="${block ? "alert('Você não atende os requisitos para este cargo!')" : `tentarContratar('${j.n}')`}">
+                <span style="font-size:1.2rem; margin-right:10px;">${j.e}</span>
+                <b>${j.n}</b> 
+                <span style="float:right; color:#4cd137">R$ ${j.s}</span>
+                ${reqMsg}
+            </button>`;
+        });
+        
+        // Note o "true" no final para ativar o botão voltar
+        abrirModal("MERCADO", h, true);
+    }
+}
+
+// --- ATUALIZAÇÃO DAS ATIVIDADES ---
+function abrirAtividades() {
+    abrirModal("ATIVIDADES", `
+        <button class="btn-choice" onclick="abrirRede('ig')">📸 Instagram (${p.redes.ig} seg.)</button>
+        <button class="btn-choice" onclick="abrirRede('tt')">📱 TikTok (${p.redes.tt} seg.)</button>
+        <button class="btn-choice" onclick="irFaculdade()">🎓 Ir para Faculdade</button>
+        <button class="btn-choice" style="background:#c23616" onclick="resetGame()">✨ Nova Vida (Reset)</button>
+    `);
+}
+
+function abrirRede(r) {
+    let nomeRede = r === 'ig' ? "INSTAGRAM" : "TIKTOK";
+    abrirModal(nomeRede, `
+        <div style="padding:20px; background:#2c2c2e; border-radius:15px; margin-bottom:15px;">
+             <p>Seguidores Totais</p>
+             <h2 style="color:#4cd137">${p.redes[r].toLocaleString()}</h2>
+        </div>
+        <button class="btn-choice" onclick="postar('${r}')">📝 Criar Nova Postagem</button>
+    `, true); // Botão voltar ativado
+}
 
 // --- MINI-GAME DE ESFORÇO ---
 let countMg = 0;
