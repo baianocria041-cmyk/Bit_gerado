@@ -8,7 +8,7 @@
 </head>
 <body>
     <div id="game-container">
-        <header id="game-header">
+        <header>
             <div class="stats-grid">
                 <div class="stat"><span>FELICIDADE</span><div class="bar"><div id="bar-happy"></div></div></div>
                 <div class="stat"><span>INTELIGÊNCIA</span><div class="bar"><div id="bar-smart"></div></div></div>
@@ -20,21 +20,19 @@
 
         <main id="event-log"></main>
 
-        <footer id="game-footer">
+        <footer>
             <div class="player-info">
                 <span id="v-name">Jogador</span> | <span id="v-age">0 anos</span>
             </div>
             <nav class="main-menu">
                 <button onclick="abrirAtivos()">📂<br>ATIVOS</button>
                 <button onclick="abrirJobs()">💼<br>OCUPAÇÃO</button>
-                
                 <div class="btn-age-container">
                     <button class="btn-age" onclick="envelhecer()">+</button>
-                    <small>ENVELHECER</small>
+                    <small>IDADE</small>
                 </div>
-
                 <button onclick="abrirSocial()">👥<br>SOCIAL</button>
-                <button onclick="abrirAtividades()">🎬<br>ATIVIDADES</button>
+                <button onclick="abrirAtividades()">🎬<br>ROTINA</button>
             </nav>
         </footer>
     </div>
@@ -46,7 +44,6 @@
             <button class="btn-close" onclick="fecharModal()">VOLTAR</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
