@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BitLife Clone</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <header>
+            <div class="stats-bar">
+                <div class="stat"><small>Felicidade</small><div class="bar"><div id="bar-happy" style="width: 50%"></div></div></div>
+                <div class="stat"><small>Saúde</small><div class="bar"><div id="bar-health" style="width: 50%"></div></div></div>
+                <div class="stat"><small>Inteligência</small><div class="bar"><div id="bar-smart" style="width: 50%"></div></div></div>
+                <div class="stat"><small>Aparência</small><div class="bar"><div id="bar-looks" style="width: 50%"></div></div></div>
+            </div>
+            <h2 id="display-money">R$ 0</h2>
+        </header>
+
+        <main id="event-log">
+            </main>
+
+        <footer>
+            <div class="info-footer">
+                <b id="display-name">Nome Sobrenome</b>
+                <span id="display-age">0 anos</span>
+            </div>
+            <div class="actions">
+                <button onclick="abrir('assets')">Ativos</button>
+                <button onclick="abrir('jobs')">Ocupação</button>
+                <button class="btn-age" onclick="envelhecer()">+</button>
+                <button onclick="abrir('social')">Social</button>
+                <button onclick="abrir('activities')">Atividades</button>
+            </div>
+        </footer>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Título</h3>
+            <div id="modal-body"></div>
+            <button onclick="fechar()">Fechar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
