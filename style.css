@@ -1,244 +1,41 @@
-/* Configurações Gerais - Visual Mobile Dark */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    -webkit-tap-highlight-color: transparent;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background: #000; color: #fff; height: 100vh; display: flex; justify-content: center; overflow: hidden; }
 
-body {
-    background-color: #000000;
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    height: 100vh;
-    overflow: hidden;
-}
+#game-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; padding: 15px; position: relative; }
 
-/* Container Principal */
-#game-container {
-    width: 100%;
-    max-width: 500px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    position: relative;
-}
+/* Header Estilizado */
+header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #1a1a1c; border-radius: 15px; margin-bottom: 15px; border: 1px solid #333; }
+.profile h1 { font-size: 1.1rem; color: #fff; }
+.profile p { font-size: 0.75rem; color: #4cd137; font-weight: bold; }
+.balance { text-align: right; }
+.balance h2 { font-size: 1.3rem; color: #4cd137; }
+.balance span { font-size: 0.8rem; color: #888; }
 
-/* Cabeçalho */
-header {
-    text-align: center;
-    margin-bottom: 20px;
-    padding-top: 10px;
-}
+/* Status */
+.main-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+.stat-box { background: #1a1a1c; padding: 8px; border-radius: 10px; border: 1px solid #222; }
+.stat-box span { font-size: 0.6rem; text-transform: uppercase; color: #777; font-weight: 900; }
+.meter { background: #333; height: 6px; border-radius: 3px; margin-top: 4px; overflow: hidden; }
+.fill { height: 100%; width: 0%; transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
 
-header h1 {
-    font-size: 1.6rem;
-    font-weight: 700;
-}
+.happy { background: #fbc531; } .health { background: #4cd137; } .smart { background: #00a8ff; } .looks { background: #e84118; } .grades { background: #9c88ff; }
 
-header h2 {
-    color: #4cd137;
-    font-size: 1.4rem;
-    margin-top: 5px;
-}
+/* Log */
+#event-log { flex: 1; background: #000; overflow-y: auto; padding-right: 5px; margin-bottom: 90px; }
+#event-log p { font-size: 0.85rem; padding: 12px; margin-bottom: 8px; background: #111; border-radius: 8px; border-left: 4px solid #4cd137; line-height: 1.4; }
 
-#v-age {
-    font-size: 0.9rem;
-    color: #aaa;
-    margin-top: 5px;
-}
+/* Botões */
+.actions-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #000; display: flex; justify-content: space-around; padding: 20px 10px; border-top: 1px solid #222; }
+.nav-btn { background: #2f3640; color: #fff; border: none; padding: 10px; width: 32%; border-radius: 12px; font-weight: bold; font-size: 0.8rem; }
+.age-btn { background: #4cd137; color: #000; border: 5px solid #000; width: 75px; height: 75px; border-radius: 50%; font-weight: 900; transform: translateY(-25px); box-shadow: 0 0 25px rgba(76, 209, 55, 0.3); }
 
-/* Painel de Status (Barras) */
-.stats-panel {
-    background: #1a1a1a;
-    padding: 15px;
-    border-radius: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
+/* Modal */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 9999; }
+.modal-content { background: #1c1c1e; width: 90%; max-width: 400px; padding: 25px; border-radius: 25px; text-align: center; border: 1px solid #333; }
+.btn-choice { display: block; width: 100%; background: #2c2c2e; color: #fff; border: none; padding: 15px; margin-top: 10px; border-radius: 12px; font-weight: 600; cursor: pointer; }
+.btn-choice:hover { background: #3a3a3c; }
 
-.stat-item {
-    margin-bottom: 10px;
-}
-
-.stat-item span {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    font-weight: bold;
-    color: #888;
-    display: block;
-    margin-bottom: 4px;
-}
-
-.bar-bg {
-    background: #333;
-    height: 10px;
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-.fill {
-    height: 100%;
-    width: 0%;
-    transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Cores das Barras */
-.happy { background: #f1c40f; }  /* Amarelo */
-.health { background: #2ecc71; } /* Verde */
-.smart { background: #3498db; }  /* Azul */
-.looks { background: #e67e22; }  /* Laranja */
-.grades { background: #9b59b6; } /* Roxo */
-
-/* Log de Eventos (Onde a história passa) */
-#event-log {
-    flex-grow: 1;
-    background: #111;
-    border-radius: 12px;
-    padding: 15px;
-    overflow-y: auto;
-    border: 1px solid #222;
-    margin-bottom: 85px; /* Espaço para o footer fixo */
-}
-
-#event-log p {
-    font-size: 0.95rem;
-    margin-bottom: 10px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #222;
-    line-height: 1.4;
-}
-
-/* Rodapé e Botões de Ação */
-footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    max-width: 500px;
-    background: #000;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 15px 10px;
-    border-top: 1px solid #222;
-}
-
-.btn-footer {
-    background: #262626;
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    width: 30%;
-    font-weight: bold;
-    font-size: 0.8rem;
-    cursor: pointer;
-}
-
-.btn-age {
-    background: #4cd137;
-    color: white;
-    border: none;
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(76, 209, 55, 0.3);
-    transform: translateY(-10px);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Modais (Popups) */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.9);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 20px;
-}
-
-.modal-content {
-    background: #1a1a1a;
-    width: 100%;
-    max-width: 400px;
-    padding: 25px;
-    border-radius: 20px;
-    text-align: center;
-    border: 1px solid #333;
-}
-
-.modal-content h2 {
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-    color: #4cd137;
-}
-
-#m-content {
-    max-height: 300px;
-    overflow-y: auto;
-    margin-bottom: 15px;
-}
-
-.btn-opt {
-    display: block;
-    width: 100%;
-    background: #333;
-    color: white;
-    border: none;
-    padding: 15px;
-    margin-top: 10px;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.btn-opt:active {
-    background: #444;
-    transform: scale(0.98);
-}
-
-.btn-close {
-    background: transparent;
-    color: #666;
-    border: none;
-    margin-top: 15px;
-    font-size: 0.9rem;
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-/* Animação de Tremor (Chefe Bravo) */
-@keyframes shake {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(8px, 0); }
-    50% { transform: translate(-8px, 0); }
-    75% { transform: translate(8px, 0); }
-    100% { transform: translate(0, 0); }
-}
-
-.shake {
-    animation: shake 0.2s ease-in-out 3;
-}
-
-/* Estilo para itens bloqueados no menu */
-.btn-locked {
-    opacity: 0.5;
-    background: #111;
-    color: #555;
-}
+/* Mini-games & Animations */
+@keyframes shake { 0%, 100% {transform: translate(0,0);} 25% {transform: translate(-10px, 0);} 75% {transform: translate(10px, 0);} }
+.shake-anim { animation: shake 0.1s ease-in-out 4; }
+.target-circle { width: 90px; height: 90px; background: #4cd137; border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 1.5rem; transition: 0.1s; }
