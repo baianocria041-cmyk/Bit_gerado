@@ -58,3 +58,7 @@ h1 { text-align: center; color: var(--primary); margin: 10px 0; }
     font-weight: bold;
 }
 .btn-locked { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
+
+#bar-grades { background: #9b59b6; } /* Barra de Notas - Roxo */
+#bar-relationship { background: #ff7675; } /* Barra de Relacionamento - Rosa */
+.school-ui { border: 2px solid #9b59b6; padding: 10px; border-radius: 10px; margin-top: 10px; }
