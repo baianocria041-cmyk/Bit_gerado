@@ -124,6 +124,53 @@ function interagir(idx) {
     addLog(`Tive uma ótima conversa com meu ${p.familia[idx].tipo}.`);
     fecharModal();
 }
+function morrer(motivo) {
+    p.vivo = false;
+    let herdeiro = p.familia.find(f => f.tipo === "Filho" || f.tipo === "Esposa");
+    
+    if (herdeiro && p.grana > 0) {
+        alert(`Você morreu de ${motivo}. Seu herdeiro ${herdeiro.nome} recebeu R$ ${p.grana.toLocaleString()}.`);
+        // Aqui você resetaria o 'p' mas manteria a grana para o novo personagem
+    }
+}
+function tirarCarteira() {
+    if (p.idade >= 18 && !p.temCarteira) {
+        if (Math.random() > 0.3) {
+            p.temCarteira = true;
+            addLog("🚗 Você passou no teste de direção!", "var(--primary)");
+        } else {
+            addLog("❌ Você reprovou no teste de direção.", "var(--danger)");
+        }
+    }
+}
+function processarEventosAleatorios() {
+    let sorte = Math.random() * 100;
+    
+    if (sorte < 5) { // 5% de chance de doença
+        p.stats.sau -= 20;
+        addLog("🤒 Você contraiu uma gripe forte. Vá ao médico!", "var(--danger)");
+    }
+    
+    if (sorte > 95 && p.idade > 18) { // 5% de chance de promoção
+        if (p.emprego) {
+            p.emprego.sal *= 1.2;
+            addLog("📈 Você recebeu um aumento por bom desempenho!", "var(--primary)");
+        }
+    }
+}
+
+
+function comprarCasa(casa) {
+    if (p.grana >= casa.preco) {
+        p.grana -= casa.preco;
+        p.imoveis.push(casa);
+        p.stats.fel += 30;
+        addLog(`🏠 Você comprou uma ${casa.nome}!`);
+    } else {
+        flash("Dinheiro insuficiente!");
+    }
+}
+
 
 // --- 8. MOTOR DE INTERFACE E LOG ---
 function update() {
