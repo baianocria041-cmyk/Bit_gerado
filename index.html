@@ -2,48 +2,66 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BitLife Brasil Ultra</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitLife Clone - Mobile</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
     <div id="game-container">
         <header>
-            <div class="stats-grid">
-                <div class="stat"><span>FELICIDADE</span><div class="bar"><div id="bar-happy"></div></div></div>
-                <div class="stat"><span>INTELIGÊNCIA</span><div class="bar"><div id="bar-smart"></div></div></div>
-                <div class="stat"><span>SAÚDE</span><div class="bar"><div id="bar-health"></div></div></div>
-                <div class="stat"><span>APARÊNCIA</span><div class="bar"><div id="bar-looks"></div></div></div>
+            <div class="user-info">
+                <h1 id="v-name">Carregando...</h1>
+                <h2 id="v-money">R$ 0</h2>
             </div>
-            <h1 id="v-money">R$ 0</h1>
+            <div class="age-badge">
+                <span id="v-age">0 anos</span>
+            </div>
         </header>
 
-        <main id="event-log"></main>
+        <section class="stats-container">
+            <div class="stat-row">
+                <span>Felicidade</span>
+                <div class="bar-bg"><div id="bar-happy" class="bar-fill" style="width: 80%"></div></div>
+            </div>
+            <div class="stat-row">
+                <span>Saúde</span>
+                <div class="bar-bg"><div id="bar-health" class="bar-fill" style="width: 100%"></div></div>
+            </div>
+            <div class="stat-row">
+                <span>Inteligência</span>
+                <div class="bar-bg"><div id="bar-smart" class="bar-fill" style="width: 50%"></div></div>
+            </div>
+            <div class="stat-row">
+                <span>Aparência</span>
+                <div class="bar-bg"><div id="bar-looks" class="bar-fill" style="width: 50%"></div></div>
+            </div>
+            <div class="stat-row">
+                <span>Desempenho Escolar</span>
+                <div class="bar-bg"><div id="bar-grades" class="bar-fill" style="width: 0%"></div></div>
+            </div>
+        </section>
+
+        <main id="event-log">
+            </main>
 
         <footer>
-            <div class="player-info">
-                <span id="v-name">Jogador</span> | <span id="v-age">0 anos</span>
-            </div>
-            <nav class="main-menu">
-                <button onclick="abrirAtivos()">📂<br>ATIVOS</button>
-                <button onclick="abrirJobs()">💼<br>OCUPAÇÃO</button>
-                <div class="btn-age-container">
-                    <button class="btn-age" onclick="envelhecer()">+</button>
-                    <small>IDADE</small>
-                </div>
-                <button onclick="abrirSocial()">👥<br>SOCIAL</button>
-                <button onclick="abrirAtividades()">🎬<br>ROTINA</button>
-            </nav>
+            <button class="btn-action" onclick="abrirJobs()">💼 Ocupação</button>
+            <button class="btn-age" onclick="envelhecer()">➕<br>IDADE</button>
+            <button class="btn-action" onclick="abrirSocial()">📱 Social</button>
         </footer>
     </div>
 
-    <div id="modal" class="modal">
+    <div id="modal" class="modal-overlay">
         <div class="modal-content">
-            <h3 id="modal-title">Título</h3>
-            <div id="m-content"></div>
-            <button class="btn-close" onclick="fecharModal()">VOLTAR</button>
+            <h2 id="modal-title">Título</h2>
+            <hr>
+            <div id="m-content">
+                </div>
+            <button class="btn-close" onclick="fecharModal()">Fechar</button>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
