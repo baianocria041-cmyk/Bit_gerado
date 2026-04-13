@@ -1,75 +1,42 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: #000; color: #fff; height: 100vh; display: flex; justify-content: center; overflow: hidden; }
 
-#game-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; padding: 15px; position: relative; }
+#game-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; padding: 15px; height: 100vh; }
 
-/* Header Estilizado */
-header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #1a1a1c; border-radius: 15px; margin-bottom: 15px; border: 1px solid #333; }
-.profile h1 { font-size: 1.1rem; color: #fff; }
-.profile p { font-size: 0.75rem; color: #4cd137; font-weight: bold; }
-.balance { text-align: right; }
-.balance h2 { font-size: 1.3rem; color: #4cd137; }
+/* Header */
+header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #1a1a1c; border-radius: 15px; margin-bottom: 10px; border: 1px solid #333; }
+.profile h1 { font-size: 1rem; }
+.profile p { font-size: 0.7rem; color: #4cd137; font-weight: bold; text-transform: uppercase; }
+.balance h2 { font-size: 1.2rem; color: #4cd137; }
 .balance span { font-size: 0.8rem; color: #888; }
 
-/* Status */
-.main-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-.stat-box { background: #1a1a1c; padding: 8px; border-radius: 10px; border: 1px solid #222; }
-.stat-box span { font-size: 0.6rem; text-transform: uppercase; color: #777; font-weight: 900; }
+/* Status Bars */
+.main-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.stat-box { background: #1a1a1c; padding: 6px 10px; border-radius: 10px; border: 1px solid #222; }
+.stat-box span { font-size: 0.55rem; text-transform: uppercase; color: #777; font-weight: 900; }
 .meter { background: #333; height: 6px; border-radius: 3px; margin-top: 4px; overflow: hidden; }
-.fill { height: 100%; width: 0%; transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
-
+.fill { height: 100%; width: 0%; transition: width 0.6s ease; }
 .happy { background: #fbc531; } .health { background: #4cd137; } .smart { background: #00a8ff; } .looks { background: #e84118; } .grades { background: #9c88ff; }
 
 /* Log */
-#event-log { flex: 1; background: #000; overflow-y: auto; padding-right: 5px; margin-bottom: 90px; }
-#event-log p { font-size: 0.85rem; padding: 12px; margin-bottom: 8px; background: #111; border-radius: 8px; border-left: 4px solid #4cd137; line-height: 1.4; }
+#event-log { flex: 1; overflow-y: auto; padding: 10px 0; margin-bottom: 90px; }
+#event-log p { font-size: 0.85rem; padding: 12px; margin-bottom: 8px; background: #111; border-radius: 10px; border-left: 4px solid #4cd137; }
 
-/* Botões */
-.actions-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #000; display: flex; justify-content: space-around; padding: 20px 10px; border-top: 1px solid #222; }
-.nav-btn { background: #2f3640; color: #fff; border: none; padding: 10px; width: 32%; border-radius: 12px; font-weight: bold; font-size: 0.8rem; }
-.age-btn { background: #4cd137; color: #000; border: 5px solid #000; width: 75px; height: 75px; border-radius: 50%; font-weight: 900; transform: translateY(-25px); box-shadow: 0 0 25px rgba(76, 209, 55, 0.3); }
+/* Navegação */
+.actions-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #000; display: flex; justify-content: space-around; padding: 15px 10px; border-top: 1px solid #222; align-items: center; }
+.nav-btn { background: #2f3640; color: #fff; border: none; padding: 12px; width: 32%; border-radius: 12px; font-weight: bold; font-size: 0.8rem; }
+.age-btn { background: #4cd137; color: #000; border: 5px solid #000; width: 70px; height: 70px; border-radius: 50%; font-weight: 900; transform: translateY(-20px); box-shadow: 0 0 20px rgba(76, 209, 55, 0.3); }
 
-/* Modal */
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 9999; }
-.modal-content { background: #1c1c1e; width: 90%; max-width: 400px; padding: 25px; border-radius: 25px; text-align: center; border: 1px solid #333; }
-.btn-choice { display: block; width: 100%; background: #2c2c2e; color: #fff; border: none; padding: 15px; margin-top: 10px; border-radius: 12px; font-weight: 600; cursor: pointer; }
-.btn-choice:hover { background: #3a3a3c; }
+/* MODAL E ROLAGEM */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 999; }
+.modal-content { background: #1c1c1e; width: 90%; max-width: 420px; max-height: 85vh; padding: 20px; border-radius: 25px; border: 1px solid #333; display: flex; flex-direction: column; }
+#m-body { flex: 1; overflow-y: auto; padding-right: 5px; margin: 10px 0; -webkit-overflow-scrolling: touch; }
 
-/* Mini-games & Animations */
-@keyframes shake { 0%, 100% {transform: translate(0,0);} 25% {transform: translate(-10px, 0);} 75% {transform: translate(10px, 0);} }
+/* Botões Internos */
+.back-btn { background: #333; color: #4cd137; border: 1px solid #4cd137; padding: 8px 15px; border-radius: 8px; margin-bottom: 15px; width: fit-content; font-weight: bold; cursor: pointer; }
+.btn-choice { display: block; width: 100%; background: #2c2c2e; color: #fff; border: none; padding: 15px; margin-bottom: 10px; border-radius: 12px; font-weight: 600; text-align: left; }
+.close-modal-btn { background: transparent; color: #666; border: none; padding: 10px; text-decoration: underline; font-size: 0.9rem; }
+
+/* Animações */
+@keyframes shake { 0%, 100% {transform: translateX(0);} 25% {transform: translateX(-10px);} 75% {transform: translateX(10px);} }
 .shake-anim { animation: shake 0.1s ease-in-out 4; }
-.target-circle { width: 90px; height: 90px; background: #4cd137; border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900; font-size: 1.5rem; transition: 0.1s; }
-/* Permite rolagem dentro do modal se a lista for grande */
-#m-body {
-    max-height: 60vh; /* Ocupa no máximo 60% da altura da tela */
-    overflow-y: auto; /* Ativa a rolagem vertical */
-    padding-right: 5px;
-    margin: 15px 0;
-    scrollbar-width: thin;
-    scrollbar-color: #4cd137 #1a1a1c;
-}
-
-/* Estilo do Botão de Voltar */
-.back-btn {
-    background: #3d3d3f;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    margin-bottom: 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-/* Customização da barra de rolagem para navegadores Chrome/Safari */
-#m-body::-webkit-scrollbar {
-    width: 6px;
-}
-#m-body::-webkit-scrollbar-thumb {
-    background: #4cd137;
-    border-radius: 10px;
-}
