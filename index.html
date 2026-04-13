@@ -2,40 +2,45 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BitLife Mobile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BitLife Ultimate Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
         <header>
-            <h1 id="v-name">Valentina Pereira</h1>
-            <h2 id="v-money">R$ 0</h2>
-            <div id="v-age">0 anos</div>
+            <div class="profile">
+                <h1 id="v-name">Iniciando...</h1>
+                <p id="v-job-title">Desempregado</p>
+            </div>
+            <div class="balance">
+                <h2 id="v-money">R$ 0</h2>
+                <span id="v-age">0 anos</span>
+            </div>
         </header>
 
-        <section class="stats-panel">
-            <div class="stat-item"><span>Felicidade</span><div class="bar-bg"><div id="bar-happy" class="fill happy"></div></div></div>
-            <div class="stat-item"><span>Saúde</span><div class="bar-bg"><div id="bar-health" class="fill health"></div></div></div>
-            <div class="stat-item"><span>Inteligência</span><div class="bar-bg"><div id="bar-smart" class="fill smart"></div></div></div>
-            <div class="stat-item"><span>Aparência</span><div class="bar-bg"><div id="bar-looks" class="fill looks"></div></div></div>
-            <div class="stat-item"><span>Escola</span><div class="bar-bg"><div id="bar-grades" class="fill grades"></div></div></div>
+        <section class="main-stats">
+            <div class="stat-box"><span>Felicidade</span><div class="meter"><div id="bar-happy" class="fill happy"></div></div></div>
+            <div class="stat-box"><span>Saúde</span><div class="meter"><div id="bar-health" class="fill health"></div></div></div>
+            <div class="stat-box"><span>Inteligência</span><div class="meter"><div id="bar-smart" class="fill smart"></div></div></div>
+            <div class="stat-box"><span>Aparência</span><div class="meter"><div id="bar-looks" class="fill looks"></div></div></div>
+            <div class="stat-box"><span>Escola/Cargo</span><div class="meter"><div id="bar-grades" class="fill grades"></div></div></div>
         </section>
 
         <div id="event-log"></div>
 
-        <footer>
-            <button class="btn-footer" onclick="abrirJobs()">💼 Ocupação</button>
-            <button class="btn-age" onclick="envelhecer()">➕<br>IDADE</button>
-            <button class="btn-footer" onclick="abrirSocial()">📱 Social</button>
-        </footer>
+        <nav class="actions-bar">
+            <button class="nav-btn" onclick="abrirOcupacao()">💼 Ocupação</button>
+            <button class="age-btn" onclick="envelhecer()">➕<br>IDADE</button>
+            <button class="nav-btn" onclick="abrirAtividades()">📱 Atividades</button>
+        </nav>
     </div>
 
     <div id="modal" class="modal-overlay">
         <div class="modal-content">
-            <h2 id="modal-title">NASCIMENTO</h2>
-            <div id="m-content"></div>
-            <button class="btn-close" onclick="fecharModal()">Fechar</button>
+            <h2 id="modal-title">Evento</h2>
+            <div id="m-body"></div>
+            <button class="close-btn" onclick="fecharModal()">Continuar</button>
         </div>
     </div>
 
