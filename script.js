@@ -6,6 +6,77 @@ let p = {
     formacao: null, emprego: null, vivo: true, preso: false,
     historico: []
 };
+let p = {
+    nome: "Carlos Silva", idade: 21, grana: 1250,
+    stats: { fel: 50, sau: 80, int: 60, apa: 50 }
+};
+
+function envelhecer() {
+    p.idade++;
+    // Chance de aparecer Tinder
+    if(p.idade > 18 && Math.random() > 0.5) {
+        spawnTinder();
+    } else {
+        addLog(`Fui ao médico e descobri que estou com uma gripe forte. 🤒`);
+        p.stats.sau -= 10;
+    }
+    update();
+}
+
+function spawnTinder() {
+    const nomes = ["Marina", "Julia", "Fernanda", "Sophia"];
+    const nome = nomes[Math.floor(Math.random()*nomes.length)];
+    const idade = p.idade + Math.floor(Math.random()*3);
+    
+    const html = `
+        <div class="log-item tinder-card">
+            <b>🔥 TINDER 🧡</b><br>
+            <small>Combinei com ${nome}, ${idade}.<br>Dar um like?</small>
+            <div class="tinder-btns">
+                <button class="btn-like" onclick="responderTinder(true, '${nome}')">Like</button>
+                <button class="btn-dislike" onclick="responderTinder(false)">Dislike</button>
+            </div>
+        </div>
+    `;
+    const log = document.getElementById('event-log');
+    log.insertAdjacentHTML('afterbegin', html);
+}
+
+function responderTinder(aceitou, nome) {
+    if(aceitou) {
+        addLog(`💕 Comecei a namorar ${nome}!`);
+        p.stats.fel += 20;
+    } else {
+        addLog(`Passei o perfil no Tinder.`);
+    }
+    update();
+}
+
+function update() {
+    document.getElementById('v-money').innerText = "R$ " + p.grana.toLocaleString();
+    document.getElementById('v-age').innerText = p.idade + " anos";
+    document.getElementById('bar-happy').style.width = p.stats.fel + "%";
+    document.getElementById('bar-health').style.width = p.stats.sau + "%";
+    document.getElementById('bar-smart').style.width = p.stats.int + "%";
+    document.getElementById('bar-looks').style.width = p.stats.apa + "%";
+}
+
+function addLog(msg) {
+    const log = document.getElementById('event-log');
+    log.innerHTML = `<div class="log-item"><b>Ano ${p.idade}</b> | ${msg}</div>` + log.innerHTML;
+}
+
+function abrirModal(t) {
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('modal-title').innerText = t;
+}
+
+function fecharModal() {
+    document.getElementById('modal').style.display = 'none';
+}
+
+update();
+
 
 // --- 2. BANCOS DE DADOS (CONTEÚDO) ---
 const DB = {
