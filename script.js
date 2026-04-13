@@ -28,6 +28,64 @@ function envelhecer() {
     
     update();
 }
+// --- MENU DE ATIVIDADES ---
+function abrirAtividades() {
+    let html = `
+        <div class="menu-scroll">
+            <button class="btn-opt" onclick="rotina('academia')">🏋️ Ir à Academia (R$ 50)</button>
+            <button class="btn-opt" onclick="rotina('meditar')">🧘 Meditar (Grátis)</button>
+            <button class="btn-opt" onclick="rotina('ler')">📖 Ler um Livro (Grátis)</button>
+            <button class="btn-opt" onclick="rotina('balada')">🕺 Sair para Balada (R$ 200)</button>
+            <button class="btn-opt" onclick="rotina('cinema')">🎬 Ir ao Cinema (R$ 60)</button>
+            <button class="btn-opt" style="background:#e74c3c" onclick="iniciarMiniGameFuga()">🎭 Cometer um Crime</button>
+        </div>
+    `;
+    abrirModal("ATIVIDADES DIÁRIAS", html);
+}
+
+// --- LÓGICA DAS ATIVIDADES ---
+function rotina(tipo) {
+    switch(tipo) {
+        case 'academia':
+            if(p.grana >= 50) {
+                p.grana -= 50;
+                p.stats.sau = Math.min(100, p.stats.sau + 15);
+                p.stats.apa = Math.min(100, p.stats.apa + 5);
+                addLog("Treinei pesado na academia! Me sinto mais forte.", "var(--primary)");
+            } else { alert("Sem dinheiro para a mensalidade!"); }
+            break;
+            
+        case 'meditar':
+            p.stats.fel = Math.min(100, p.stats.fel + 10);
+            p.stats.sau = Math.min(100, p.stats.sau + 5);
+            addLog("Tirei um tempo para meditar. Paz interior alcançada.");
+            break;
+            
+        case 'ler':
+            p.stats.int = Math.min(100, p.stats.int + 10);
+            p.stats.fel = Math.min(100, p.stats.fel + 2);
+            addLog("Li um livro de filosofia. Me sinto mais culto.", "var(--blue)");
+            break;
+            
+        case 'balada':
+            if(p.grana >= 200) {
+                p.grana -= 200;
+                p.stats.fel = Math.min(100, p.stats.fel + 30);
+                p.stats.sau -= 5; // Ressaca!
+                addLog("A festa foi épica! Mas acordei com um pouco de dor de cabeça.", "purple");
+            } else { alert("Estou quebrado, não dá para sair hoje."); }
+            break;
+
+        case 'cinema':
+            if(p.grana >= 60) {
+                p.grana -= 60;
+                p.stats.fel = Math.min(100, p.stats.fel + 15);
+                addLog("Assisti a um filme incrível no cinema.");
+            } else { alert("Pipoca está cara, sem dinheiro!"); }
+            break;
+    }
+    fecharModal();
+}
 
 function update() {
     // Atualiza Textos
