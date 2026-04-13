@@ -62,3 +62,10 @@ h1 { text-align: center; color: var(--primary); margin: 10px 0; }
 #bar-grades { background: #9b59b6; } /* Barra de Notas - Roxo */
 #bar-relationship { background: #ff7675; } /* Barra de Relacionamento - Rosa */
 .school-ui { border: 2px solid #9b59b6; padding: 10px; border-radius: 10px; margin-top: 10px; }
+.event-choice { 
+    background: #34495e !important; 
+    border-left: 5px solid var(--primary) !important;
+    text-align: center !important;
+    margin-top: 10px !important;
+}
+.event-img { font-size: 50px; margin-bottom: 15px; }
