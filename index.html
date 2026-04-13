@@ -25,16 +25,18 @@
                 <span id="v-name">Nome</span> | <span id="v-age">0 anos</span>
             </div>
             <nav class="main-menu">
-                <button onclick="abrir('assets')">📂<br>ATIVOS</button>
-                <button onclick="abrir('jobs')">💼<br>OCUPAÇÃO</button>
-                <div class="btn-age-container">
-                    <button class="btn-age" onclick="envelhecer()">+</button>
-                    <small>ENVELHECER</small>
-                </div>
-                <button onclick="abrir('social')">👥<br>SOCIAL</button>
-                <button onclick="abriractividades()">🎬<br>ATIVIDADES</button>
-            </nav>
-        </footer>
+    <button onclick="abrirAtivos()">📂<br>ATIVOS</button>
+    <button onclick="abrirJobs()">💼<br>OCUPAÇÃO</button>
+    
+    <div class="btn-age-container">
+        <button class="btn-age" onclick="envelhecer()">+</button>
+        <small>ENVELHECER</small>
+    </div>
+
+    <button onclick="abrirSocial()">👥<br>SOCIAL</button>
+    <button onclick="abrirAtividades()">🎬<br>ATIVIDADES</button>
+</nav>
+    </footer>
     </div>
 
     <div id="modal" class="modal">
