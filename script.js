@@ -1,115 +1,120 @@
-// --- ESTADO INICIAL ---
+// --- ESTADO GLOBAL DO JOGADOR ---
 let p = {
-    nome: "Carlos", sobrenome: "Silva", idade: 0, grana: 100,
-    stats: { fel: 50, int: 50, sau: 80, apa: 50 },
-    vivo: true, job: null, namorada: null, 
-    formacao: null, imoveis: [], veiculos: [],
-    familia: [{tipo: "Pai", rel: 80}, {tipo: "Mãe", rel: 90}]
+    nome: "Carlos", sobrenome: "Silva", idade: 18, grana: 1250,
+    stats: { fel: 50, int: 60, sau: 80, apa: 50 },
+    vivo: true, preso: false, namorada: null, job: null,
+    imoveis: [], veiculos: [], formacao: null
 };
 
+// --- BANCO DE DADOS ---
 const DB = {
     faculdade: [
         {n: "Direito", anos: 5, intReq: 70},
         {n: "Medicina", anos: 6, intReq: 85},
         {n: "TI", anos: 4, intReq: 60}
     ],
-    carros: [
-        {n: "Celta Usado", v: 15000, manut: 200},
-        {n: "Civic", v: 110000, manut: 800}
+    empregos: [
+        {n: "Vendedor", sal: 2500}, {n: "Desenvolvedor", sal: 5000, req: "TI"},
+        {n: "Advogado", sal: 8000, req: "Direito"}, {n: "Médico", sal: 15000, req: "Medicina"}
     ],
-    casas: [
-        {n: "Apartamento", v: 250000, manut: 1200},
-        {n: "Mansão", v: 5000000, manut: 15000}
-    ]
+    loja: {
+        carros: [{n: "Celta", v: 15000, m: 200}, {n: "Civic", v: 110000, m: 800}],
+        casas: [{n: "Apartamento", v: 250000, m: 1200}, {n: "Mansão", v: 5000000, m: 15000}]
+    }
 };
 
-// --- MOTOR DE ENVELHECIMENTO ---
+// --- FUNÇÃO PRINCIPAL: ENVELHECER ---
 function envelhecer() {
     if (!p.vivo) return;
+
+    // 1. Limpeza de Segurança (Evita travar o scroll)
+    const log = document.getElementById('event-log');
+    if (log.children.length > 30) log.removeChild(log.lastChild);
+
     p.idade++;
 
-    // Economia
+    // 2. Economia (Salário - Manutenção)
     if (p.job) p.grana += p.job.sal;
-    p.veiculos.forEach(v => p.grana -= v.manut);
-    p.imoveis.forEach(i => p.grana -= i.manut);
+    p.veiculos.forEach(v => p.grana -= v.m);
+    p.imoveis.forEach(i => p.grana -= i.m);
 
-    // Eventos
+    // 3. Eventos Aleatórios
     let sorte = Math.random();
-    if (p.idade > 18 && sorte > 0.8) spawnTinder();
-    if (sorte < 0.1) addLog("Você estudou um pouco mais e ficou mais inteligente.", "var(--social)");
+    if (sorte > 0.8) spawnTinder();
+    else if (sorte < 0.15) {
+        p.stats.sau -= 20;
+        addLog("Você adoeceu seriamente e perdeu saúde. 🤒", "red");
+    }
 
-    if (p.stats.sau <= 0 || (p.idade > 80 && Math.random() < 0.15)) morrer();
+    // 4. Checagem de Morte
+    if (p.stats.sau <= 0 || (p.idade > 80 && Math.random() < 0.2)) {
+        morrer();
+        return;
+    }
+
     update();
 }
 
 // --- SISTEMA DE MORTE E HERANÇA ---
 function morrer() {
     p.vivo = false;
-    alert(`Morreu aos ${p.idade} anos. Seu filho herdou R$ ${(p.grana * 0.8).toLocaleString()}`);
     let heranca = p.grana * 0.8;
-    p = { nome: "Júnior", sobrenome: p.sobrenome, idade: 0, grana: heranca, stats: {fel:50, int:60, sau:100, apa:50}, vivo:true, job:null, imoveis:[], veiculos:[], familia:[] };
+    alert(`💀 Fim da vida aos ${p.idade} anos.\nPatrimônio: R$ ${p.grana.toLocaleString()}\nSeu herdeiro recebeu R$ ${heranca.toLocaleString()}.`);
+    
+    // Reseta para o Herdeiro
+    p = { 
+        nome: "Carlos Jr", sobrenome: p.sobrenome, idade: 0, grana: heranca,
+        stats: { fel: 50, int: 70, sau: 100, apa: 50 },
+        vivo: true, preso: false, namorada: null, job: null, imoveis: [], veiculos: []
+    };
     document.getElementById('event-log').innerHTML = "";
+    addLog("Vida nova iniciada como herdeiro!", "var(--primary)");
     update();
 }
 
-// --- SHOPPING & ATIVOS ---
-function abrirAtividades() {
-    const c = document.getElementById('m-content');
-    c.innerHTML = `
-        <button class="btn-opt" onclick="menuShopping('carros')">🚗 COMPRAR CARRO</button>
-        <button class="btn-opt" onclick="menuShopping('casas')">🏠 COMPRAR CASA</button>
-        <button class="btn-opt" style="background:red" onclick="iniciarMiniGameFuga()">🎭 ASSALTAR</button>
-        <button class="btn-opt" onclick="menuEdu()">🎓 FACULDADE</button>
-    `;
-    abrirModal("ATIVIDADES");
+// --- MINI-GAME DE FUGA (ASSALTO) ---
+function iniciarMiniGameFuga() {
+    const html = `
+        <div style="text-align:center">
+            <p>A polícia te cercou! Clique no verde!</p>
+            <div style="width:100%; height:30px; background:#333; position:relative; margin:15px 0; overflow:hidden">
+                <div id="bar-fuga" style="width:30px; height:100%; background:red; position:absolute; animation: moveBar 0.8s infinite alternate linear"></div>
+                <div style="width:40px; height:100%; background:green; position:absolute; left:50%; transform:translateX(-50%); opacity:0.5"></div>
+            </div>
+            <button class="btn-opt" onclick="tentarFuga()">ESCAPAR!</button>
+        </div>`;
+    abrirModal("🚓 TENTATIVA DE FUGA", html);
 }
 
-function menuShopping(tipo) {
-    const items = DB[tipo];
-    let html = `<h3>Loja de ${tipo}</h3>`;
-    items.forEach(i => {
-        html += `<button class="btn-opt" onclick="comprar('${tipo}', '${i.n}')">${i.n} - R$ ${i.v}</button>`;
-    });
-    document.getElementById('m-content').innerHTML = html;
-}
+function tentarFuga() {
+    const bar = document.getElementById('bar-fuga');
+    const pos = bar.offsetLeft;
+    const containerWidth = bar.parentElement.offsetWidth;
+    const centro = containerWidth / 2;
 
-function comprar(tipo, nome) {
-    const item = DB[tipo].find(x => x.n === nome);
-    if (p.grana >= item.v) {
-        p.grana -= item.v;
-        if (tipo === 'carros') p.veiculos.push(item);
-        else p.imoveis.push(item);
-        addLog(`💰 Você comprou um(a) ${nome}!`);
+    if (Math.abs(pos - (centro - 15)) < 30) {
+        addLog("🕊️ Fuga espetacular! Você escapou!", "var(--primary)");
         fecharModal();
-    } else { alert("Sem dinheiro!"); }
-}
-
-// --- FACULDADE ---
-function menuEdu() {
-    let html = "<h3>Escolha um curso</h3>";
-    DB.faculdade.forEach(f => {
-        html += `<button class="btn-opt" onclick="entrarFaculdade('${f.n}')">${f.n} (Int: ${f.intReq})</button>`;
-    });
-    document.getElementById('m-content').innerHTML = html;
-}
-
-function entrarFaculdade(nome) {
-    const curso = DB.faculdade.find(f => f.n === nome);
-    if (p.stats.int >= curso.intReq) {
-        p.formacao = nome;
-        addLog(`🎓 Você se formou em ${nome}!`);
+    } else {
+        p.preso = true;
+        p.job = null;
+        addLog("⛓️ Preso! Você perdeu tudo e foi para a cadeia.", "orange");
         fecharModal();
-    } else { alert("Você não é inteligente o suficiente!"); }
+    }
 }
 
-// --- UTILITÁRIOS INTERFACE ---
+// --- INTERFACE E MENUS ---
 function update() {
-    document.getElementById('v-money').innerText = "R$ " + Math.floor(p.grana).toLocaleString();
-    document.getElementById('v-age').innerText = p.idade + " anos";
-    document.getElementById('bar-happy').style.width = p.stats.fel + "%";
-    document.getElementById('bar-smart').style.width = p.stats.int + "%";
-    document.getElementById('bar-health').style.width = p.stats.sau + "%";
-    document.getElementById('bar-looks').style.width = p.stats.apa + "%";
+    try {
+        document.getElementById('v-money').innerText = "R$ " + Math.floor(p.grana).toLocaleString();
+        document.getElementById('v-age').innerText = p.idade + " anos";
+        document.getElementById('v-name').innerText = `${p.nome} ${p.sobrenome}`;
+        
+        document.getElementById('bar-happy').style.width = p.stats.fel + "%";
+        document.getElementById('bar-smart').style.width = p.stats.int + "%";
+        document.getElementById('bar-health').style.width = p.stats.sau + "%";
+        document.getElementById('bar-looks').style.width = p.stats.apa + "%";
+    } catch(e) {}
 }
 
 function addLog(msg, cor = "#2d3640") {
@@ -117,13 +122,86 @@ function addLog(msg, cor = "#2d3640") {
     log.insertAdjacentHTML('afterbegin', `<div class="log-item" style="border-left:4px solid ${cor}"><b>Ano ${p.idade}</b>: ${msg}</div>`);
 }
 
-function abrirModal(t) { document.getElementById('modal').style.display = 'flex'; document.getElementById('modal-title').innerText = t; }
+function abrirModal(titulo, html) {
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('modal-title').innerText = titulo;
+    document.getElementById('m-content').innerHTML = html;
+}
+
 function fecharModal() { document.getElementById('modal').style.display = 'none'; update(); }
 
-// --- TINDER & MINI-GAME (Reutilizando as funções anteriores) ---
+// --- ATIVIDADES (SHOPPING, EDUCAÇÃO, CRIMES) ---
+function abrirAtividades() {
+    let html = `
+        <button class="btn-opt" onclick="menuShop('carros')">🚗 COMPRAR VEÍCULO</button>
+        <button class="btn-opt" onclick="menuShop('casas')">🏠 IMOBILIÁRIA</button>
+        <button class="btn-opt" onclick="menuEdu()">🎓 EDUCAÇÃO</button>
+        <button class="btn-opt" style="background:#e74c3c" onclick="iniciarMiniGameFuga()">🎭 COMETER CRIME</button>
+    `;
+    abrirModal("ATIVIDADES", html);
+}
+
+function menuShop(tipo) {
+    let html = "";
+    DB.loja[tipo].forEach(i => {
+        html += `<button class="btn-opt" onclick="comprar('${tipo}', '${i.n}')">${i.n} - R$ ${i.v}</button>`;
+    });
+    abrirModal("SHOPPING", html);
+}
+
+function comprar(tipo, nome) {
+    const item = DB.loja[tipo].find(x => x.n === nome);
+    if (p.grana >= item.v) {
+        p.grana -= item.v;
+        if (tipo === 'carros') p.veiculos.push(item);
+        else p.imoveis.push(item);
+        addLog(`💰 Comprado: ${nome}!`);
+        fecharModal();
+    } else { alert("Saldo insuficiente!"); }
+}
+
+function menuEdu() {
+    let html = "";
+    DB.faculdade.forEach(f => {
+        html += `<button class="btn-opt" onclick="estudar('${f.n}')">${f.n} (Requer ${f.intReq} Int)</button>`;
+    });
+    abrirModal("UNIVERSIDADE", html);
+}
+
+function estudar(nome) {
+    const f = DB.faculdade.find(x => x.n === nome);
+    if (p.stats.int >= f.intReq) {
+        p.formacao = nome;
+        addLog(`🎓 Formado em ${nome}!`);
+        fecharModal();
+    } else { alert("Inteligência baixa!"); }
+}
+
+function abrirJobs() {
+    let html = "";
+    DB.empregos.forEach(j => {
+        html += `<button class="btn-opt" onclick="contratar('${j.n}')">${j.n} - R$ ${j.sal}</button>`;
+    });
+    abrirModal("EMPREGOS", html);
+}
+
+function contratar(nome) {
+    const j = DB.empregos.find(x => x.n === nome);
+    if (!j.req || p.formacao === j.req) {
+        p.job = j;
+        addLog(`💼 Novo emprego: ${nome}!`);
+        fecharModal();
+    } else { alert(`Requer diploma de ${j.req}!`); }
+}
+
 function spawnTinder() {
-    const html = `<div class="log-item tinder-card"><b>🔥 TINDER</b><br><div class="tinder-btns"><button class="btn-like" onclick="addLog('Namoro iniciado!')">Like</button><button class="btn-dislike" onclick="update()">Dislike</button></div></div>`;
+    const html = `
+        <div class="log-item" style="border:2px solid #e67e22; text-align:center">
+            <b>🔥 TINDER</b><br><small>Novo Match!</small><br>
+            <button class="btn-age" style="width:40px; height:40px; font-size:15px; display:inline-block" onclick="addLog('💖 Iniciou um namoro!', 'pink'); fecharModal();">❤</button>
+        </div>`;
     document.getElementById('event-log').insertAdjacentHTML('afterbegin', html);
 }
 
-update();
+// Inicialização
+window.onload = update;
