@@ -3,138 +3,69 @@
     --card-bg: #1e252d;
     --primary: #4cd137;
     --text: #ffffff;
-    --danger: #e74c3c;
-    --blue: #3498db;
-    --gold: #f1c40f;
 }
 
-/* 1. RESET PARA MODO APP */
-* { 
-    margin: 0; padding: 0; box-sizing: border-box; 
-    font-family: 'Segoe UI', sans-serif;
-    user-select: none; -webkit-tap-highlight-color: transparent;
-}
-
+/* Garante que o corpo não role e o container ocupe a tela toda */
 html, body { 
     width: 100%; height: 100%; 
-    overflow: hidden; background: #000;
-    position: fixed; /* Evita que a tela suba ao clicar nos botões */
+    overflow: hidden; background: #000; 
+    margin: 0; padding: 0;
 }
 
 #game-container {
-    width: 100%; max-width: 500px; height: 100vh; margin: auto;
-    background: var(--bg-dark); display: flex; flex-direction: column;
+    width: 100%; max-width: 500px; height: 100%; 
+    margin: auto; background: var(--bg-dark);
+    display: flex; flex-direction: column; /* Organiza em coluna: Header, Log, Footer */
 }
 
-/* 2. HEADER: BARRAS DE STATUS */
 header { 
-    padding: 15px; background: #1a2027; 
-    border-bottom: 2px solid #2d3640; flex-shrink: 0; 
+    padding: 10px; flex-shrink: 0; /* Impede o topo de sumir */
+    background: #1a2027; border-bottom: 2px solid #2d3640; 
 }
 
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-.stat span { font-size: 10px; font-weight: bold; color: #aab0b8; letter-spacing: 1px; }
-
-.bar { 
-    background: #333; height: 12px; border-radius: 6px; 
-    margin-top: 3px; border: 1px solid #444; overflow: hidden; 
-}
-
-.bar div { height: 100%; transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
-#bar-happy { background: var(--primary); box-shadow: 0 0 10px rgba(76, 209, 55, 0.3); }
-#bar-health { background: var(--danger); box-shadow: 0 0 10px rgba(231, 76, 60, 0.3); }
-#bar-smart { background: var(--blue); box-shadow: 0 0 10px rgba(52, 152, 219, 0.3); }
-#bar-looks { background: var(--gold); box-shadow: 0 0 10px rgba(241, 196, 15, 0.3); }
-
-header h1 { 
-    text-align: center; color: var(--primary); 
-    font-size: 32px; margin-top: 10px; font-weight: 800;
-}
-
-/* 3. MIDDLE: LOG DE EVENTOS (ONDE O JOGO ROLA) */
 #event-log { 
-    flex: 1; overflow-y: auto; padding: 15px;
-    display: flex; flex-direction: column-reverse; gap: 12px;
-    background: radial-gradient(circle at top, #1e252d 0%, #12171d 100%);
+    flex: 1; /* O Log ocupa todo o espaço que sobrar no meio */
+    overflow-y: auto; padding: 15px;
+    display: flex; flex-direction: column-reverse; gap: 10px;
 }
 
-.log-item { 
-    background: var(--card-bg); padding: 15px; border-radius: 12px; 
-    border: 1px solid #2d3640; border-left: 5px solid #2d3640;
-    animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-
-/* 4. FOOTER: BOTÕES FIXOS */
 footer { 
-    background: #1a2027; flex-shrink: 0; 
-    padding-bottom: env(safe-area-inset-bottom);
-    border-top: 1px solid #2d3640;
-}
-
-.player-info { 
-    text-align: center; padding: 10px; font-size: 13px; 
-    color: #888; border-bottom: 1px solid #2d3640; 
+    flex-shrink: 0; /* Impede o menu de sumir ou ser esmagado */
+    background: #1a2027; border-top: 2px solid #2d3640;
+    padding-bottom: 15px; /* Espaço para evitar o corte em celulares */
 }
 
 .main-menu { 
-    display: flex; justify-content: space-around; 
-    align-items: center; padding: 10px; height: 90px;
+    display: flex; justify-content: space-around; align-items: center; 
+    padding: 5px; height: 70px;
 }
 
 .main-menu button { 
-    background: #2c3e50; border: none; color: #fff; 
-    border-radius: 12px; width: 18%; height: 55px;
-    font-size: 9px; font-weight: bold; cursor: pointer;
+    background: #2c3e50; border: none; color: white; 
+    border-radius: 10px; width: 18%; height: 50px; font-size: 9px;
+    cursor: pointer;
 }
 
-.btn-age-container { 
-    text-align: center; width: 22%; display: flex; 
-    flex-direction: column; align-items: center;
-}
+.btn-age-container { display: flex; flex-direction: column; align-items: center; width: 22%; }
 
 .btn-age { 
-    background: var(--primary) !important; color: #fff !important; 
-    font-size: 35px !important; width: 65px !important; height: 65px !important; 
-    border-radius: 50% !important; margin-top: -35px; 
-    border: 4px solid var(--bg-dark) !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    background: var(--primary) !important; width: 65px !important; height: 65px !important; 
+    border-radius: 50% !important; font-size: 35px !important; 
+    margin-top: -40px; border: 5px solid var(--bg-dark) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-.btn-age-container small { 
-    font-size: 8px; font-weight: bold; color: var(--primary); margin-top: 5px; 
-}
+.btn-age-container small { font-size: 8px; color: var(--primary); font-weight: bold; margin-top: 5px; }
 
-/* 5. MODAL E MENUS DE OPÇÕES */
-.modal { 
-    display: none; position: fixed; inset: 0; 
-    background: rgba(0,0,0,0.9); z-index: 1000; 
-    align-items: center; justify-content: center; padding: 20px;
-}
-
-.modal-content { 
-    background: var(--card-bg); width: 100%; max-width: 400px; 
-    padding: 20px; border-radius: 20px; border: 1px solid #444;
-}
-
-.btn-opt {
-    width: 100%; padding: 15px; margin-bottom: 10px;
-    background: #2c3e50; color: white; border: none;
-    border-radius: 10px; font-weight: bold; font-size: 14px;
-}
-
-/* 6. ANIMAÇÃO DO MINIGAME */
-@keyframes moveBar {
-    from { left: 0%; }
-    to { left: 92%; }
-}
-
-/* 7. SCROLLBAR CUSTOMIZADA (ESTILO APP) */
-#event-log::-webkit-scrollbar { width: 4px; }
-#event-log::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+/* Outros Estilos */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.bar { background: #333; height: 10px; border-radius: 5px; overflow: hidden; }
+.bar div { height: 100%; transition: width 0.3s; }
+#bar-happy { background: var(--primary); }
+#bar-health { background: #e74c3c; }
+#bar-smart { background: #3498db; }
+#bar-looks { background: #f1c40f; }
+h1 { text-align: center; color: var(--primary); font-size: 28px; margin: 10px 0; }
+.log-item { background: var(--card-bg); padding: 12px; border-radius: 10px; border: 1px solid #2d3640; color: white; }
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+.modal-content { background: var(--card-bg); width: 100%; max-width: 400px; padding: 20px; border-radius: 15px; }
