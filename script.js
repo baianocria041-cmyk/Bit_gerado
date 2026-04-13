@@ -1,164 +1,166 @@
-// --- DADOS DO JOGO ---
+// --- ESTADO DO PERSONAGEM ---
 const NOVO_PERSONAGEM = (nome = "Carlos") => ({
     id: Date.now(),
-    nome: nome, idade: 18, grana: 1500,
-    stats: { fel: 50, int: 50, sau: 80, apa: 50 },
+    nome: nome, idade: 18, grana: 2000,
+    stats: { fel: 50, int: 60, sau: 80, apa: 50 },
+    formacao: [], 
     job: null, faltas: 0,
-    redes: {
-        instagram: { ativa: false, seguidores: 0, posts: 0 },
-        tiktok: { ativa: false, seguidores: 0, posts: 0 }
-    }
+    redes: { instagram: { ativa: false, seguidores: 0, posts: 0 }, tiktok: { ativa: false, seguidores: 0, posts: 0 } }
 });
 
 let p = NOVO_PERSONAGEM();
 
-const empregos = [
-    { n: "Gari", s: 1500, e: "🧹" }, { n: "Vendedor", s: 2200, e: "👕" }, { n: "Caixa", s: 1800, e: "🛒" },
-    { n: "Motoboy", s: 2500, e: "🏍️" }, { n: "Pedreiro", s: 3000, e: "🧱" }, { n: "Segurança", s: 2800, e: "🛡️" },
-    { n: "Garçom", s: 1600, e: "☕" }, { n: "Cozinheiro", s: 3500, e: "👨‍🍳" }, { n: "Motorista", s: 2400, e: "🚗" },
-    { n: "Porteiro", s: 1900, e: "🔑" }, { n: "TI Junior", s: 4500, e: "💻" }, { n: "Designer", s: 4000, e: "🎨" },
-    { n: "Professor", s: 3200, e: "📚" }, { n: "Enfermeiro", s: 5000, e: "💉" }, { n: "Advogado", s: 8500, e: "⚖️" },
-    { n: "Médico", s: 15000, e: "🏥" }, { n: "Piloto", s: 12000, e: "✈️" }, { n: "YouTuber", s: 2500, e: "🎥" },
-    { n: "Modelo", s: 5000, e: "📸" }, { n: "Policial", s: 4800, e: "👮" }, { n: "Bombeiro", s: 4700, e: "👩‍🚒" },
-    { n: "DJ", s: 3000, e: "🎧" }, { n: "Padeiro", s: 2100, e: "🥖" }, { n: "Barbeiro", s: 2800, e: "💈" },
-    { n: "Eletricista", s: 3200, e: "⚡" }, { n: "Encanador", s: 3100, e: "🔧" }, { n: "Jornalista", s: 3800, e: "🎤" },
-    { n: "Arquiteto", s: 7500, e: "📐" }, { n: "Dentista", s: 9000, e: "🦷" }, { n: "Veterinário", s: 6500, e: "🐾" },
-    { n: "Atleta", s: 4500, e: "⚽" }, { n: "Cantor", s: 3500, e: "🎤" }, { n: "Ator", s: 5500, e: "🎭" },
-    { n: "Cientista", s: 8500, e: "🧪" }, { n: "Astronauta", s: 25000, e: "🚀" }, { n: "Fazendeiro", s: 2200, e: "🚜" },
-    { n: "Pescador", s: 1800, e: "🎣" }, { n: "Juiz", s: 32000, e: "🏛️" }, { n: "Político", s: 18000, e: "📜" },
-    { n: "Empresário", s: 12000, e: "💼" }
+// --- BANCO DE DADOS ORGANIZADO ---
+const jobs_comuns = [
+    { n: "Gari", s: 1500, e: "🧹", rInt: 0 }, { n: "Vendedor", s: 2200, e: "👕", rInt: 20 },
+    { n: "Caixa", s: 1800, e: "🛒", rInt: 10 }, { n: "Garçom", s: 1600, e: "☕", rInt: 10 },
+    { n: "Motoboy", s: 2500, e: "🏍️", rInt: 20 }, { n: "Cozinheiro", s: 3000, e: "👨‍🍳", rInt: 40 }
 ];
 
-// --- CORE ---
-function abrirModal(t, h) {
-    document.getElementById('modal').style.display = 'flex';
-    document.getElementById('modal-title').innerText = t;
-    document.getElementById('m-content').innerHTML = h;
-}
-function fecharModal() { document.getElementById('modal').style.display = 'none'; update(); }
+const jobs_publicos = [
+    { n: "Policial Militar", s: 5000, e: "👮", rInt: 50, rCon: true },
+    { n: "Bombeiro", s: 4800, e: "👨‍🚒", rInt: 45, rCon: true },
+    { n: "Juiz de Direito", s: 32000, e: "🏛️", rInt: 90, rCon: true, rFac: "Direito" },
+    { n: "Diplomata", s: 19000, e: "🌍", rInt: 85, rCon: true, rFac: "Relações Internacionais" },
+    { n: "Auditor Fiscal", s: 22000, e: "📑", rInt: 80, rCon: true, rFac: "Economia" }
+];
 
-function addLog(m, c = "#444") {
-    const log = document.getElementById('event-log');
-    log.insertAdjacentHTML('afterbegin', `<div class="log-item" style="border-left-color:${c}"><b>Ano ${p.idade}</b>: ${m}</div>`);
-}
+const cursos_superiores = [
+    { n: "Medicina", c: 15000, t: "Saúde", rInt: 70 },
+    { n: "Direito", c: 6000, t: "Humanas", rInt: 50 },
+    { n: "Engenharia", c: 8000, t: "Exatas", rInt: 65 },
+    { n: "Sistemas de Informação", c: 4500, t: "Exatas", rInt: 55 },
+    { n: "Economia", c: 5500, t: "Humanas", rInt: 55 }
+];
 
-// --- EMPREGOS ---
+// --- SISTEMA DE EMPREGO (SUBCAMADAS) ---
 function abrirJobs() {
     if (p.job) {
-        abrirModal("EMPREGO ATUAL", `
-            <div class="work-anim">${p.job.e}</div>
-            <p>Trabalhando como ${p.job.n}</p>
-            <p>Salário: R$ ${p.job.s.toLocaleString()}</p>
-            <button class="btn-opt" style="background:orange; margin-top:15px" onclick="faltar()">🚪 Faltar ao Trabalho</button>
-            <button class="btn-opt" style="background:red" onclick="p.job=null; fecharModal(); addLog('Você se demitiu.')">🚶 Pedir Demissão</button>
-        `);
+        mostrarTrabalhoAtivo();
     } else {
-        let h = "";
-        empregos.forEach(j => h += `<button class="btn-opt" onclick="contratar('${j.n}',${j.s},'${j.e}')">${j.e} ${j.n} (R$ ${j.s})</button>`);
-        abrirModal("VAGAS", h);
+        let h = `<div class="sub-header">💼 Empregos Comuns</div>`;
+        jobs_comuns.forEach(j => h += gerarBotaoJob(j));
+
+        h += `<div class="sub-header">🏛️ Concursos Públicos</div>`;
+        jobs_publicos.forEach(j => h += gerarBotaoJob(j));
+
+        abrirModal("CARREIRA", h);
     }
 }
 
-function contratar(n, s, e) { p.job = { n, s, e }; p.faltas = 0; addLog(`💼 Iniciou como ${n}`); fecharModal(); }
+function gerarBotaoJob(j) {
+    let bloqueado = (j.rFac && !p.formacao.includes(j.rFac)) || (p.stats.int < j.rInt);
+    let tag = j.rCon ? '<span class="req-tag">CONCURSO</span>' : '';
+    let req = j.rFac ? `<br><small>Requer: ${j.rFac}</small>` : '';
+    
+    return `<button class="btn-opt ${bloqueado ? 'btn-locked' : ''}" onclick="tentarJob('${j.n}', ${j.rCon})">
+                ${j.e} ${j.n} - R$ ${j.s} ${tag} ${req}
+            </button>`;
+}
 
+function tentarJob(nome, isConcurso) {
+    const lista = [...jobs_comuns, ...jobs_publicos];
+    const j = lista.find(x => x.n === nome);
+
+    if (j.rFac && !p.formacao.includes(j.rFac)) return alert("Você não tem o diploma necessário!");
+    if (p.stats.int < j.rInt) return alert("Sua inteligência é insuficiente para este cargo.");
+
+    if (isConcurso) {
+        if (confirm(`Deseja prestar o concurso para ${nome}?`)) {
+            let sorte = (p.stats.int + Math.random() * 100) / 2;
+            if (sorte > 75) {
+                p.job = j;
+                addLog(`🎯 APROVADO! Você agora é ${nome}.`, "gold");
+                fecharModal();
+            } else {
+                addLog(`❌ Reprovado no concurso de ${nome}. Estude mais!`, "red");
+                fecharModal();
+            }
+        }
+    } else {
+        p.job = j;
+        addLog(`💼 Iniciou como ${nome}.`);
+        fecharModal();
+    }
+}
+
+// --- SISTEMA DE EDUCAÇÃO (SUBCAMADAS) ---
+function abrirEducacao() {
+    let categorias = ["Saúde", "Exatas", "Humanas"];
+    let h = "";
+
+    categorias.forEach(cat => {
+        h += `<div class="sub-header">🎓 Área: ${cat}</div>`;
+        cursos_superiores.filter(c => c.t === cat).forEach(curso => {
+            let jaFormado = p.formacao.includes(curso.n);
+            h += `<button class="btn-opt ${jaFormado ? 'btn-locked' : ''}" onclick="fazerFaculdade('${curso.n}', ${curso.c})">
+                    ${jaFormado ? '✅' : '🎓'} ${curso.n} (R$ ${curso.c.toLocaleString()})
+                  </button>`;
+        });
+    });
+
+    abrirModal("UNIVERSIDADE", h);
+}
+
+function fazerFaculdade(nome, custo) {
+    if (p.formacao.includes(nome)) return alert("Você já é formado nisso!");
+    if (p.grana < custo) return alert("Dinheiro insuficiente!");
+    
+    p.grana -= custo;
+    p.formacao.push(nome);
+    p.stats.int += 25;
+    addLog(`🎓 Parabéns! Você concluiu o curso de ${nome}!`, "#3498db");
+    fecharModal();
+}
+
+// --- CONSEQUÊNCIAS DE FALTAR (ANIMAÇÃO) ---
 function faltar() {
     p.faltas++;
     document.getElementById('game-container').classList.add('shake');
-    setTimeout(() => document.getElementById('game-container').classList.remove('shake'), 500);
+    setTimeout(() => document.getElementById('game-container').classList.remove('shake'), 400);
+
+    let desconto = Math.floor(p.job.s * 0.2);
+    p.grana -= desconto;
     
-    let multa = Math.floor(p.job.s * 0.1);
-    p.grana -= multa;
-    let msg = ""; let boss = "😠";
+    let chefeMsg = "";
+    let face = "😠";
 
-    if (p.faltas == 1) msg = "O chefe gritou com você!";
-    else if (p.faltas == 2) { boss = "😡"; msg = `Multa de R$ ${multa} por faltar!`; }
-    else { boss = "🤬"; msg = "VOCÊ FOI DEMITIDO!"; p.job = null; }
+    if (p.faltas === 1) chefeMsg = "O chefe te deu um esporro! 'Último aviso!'";
+    else if (p.faltas === 2) { face = "😡"; chefeMsg = `SUSPENSÃO! Você perdeu R$ ${desconto} do salário.`; }
+    else { face = "🤬"; chefeMsg = "JUSTA CAUSA! Você foi demitido."; p.job = null; }
 
-    abrirModal("CHEFE", `<div style="font-size:50px">${boss}</div><p>${msg}</p>`);
-    addLog(`🚫 Falta: ${msg}`, "red");
+    abrirModal("RECLAMAÇÃO DO CHEFE", `<div class="work-anim" style="animation:none">${face}</div><p>${chefeMsg}</p>`);
+    addLog(`🚫 Falta: ${chefeMsg}`, "red");
 }
 
-// --- REDES SOCIAIS ---
-function abrirSocial() {
+// --- FUNÇÕES DE INTERFACE ---
+function mostrarTrabalhoAtivo() {
+    abrirModal("TRABALHO ATUAL", `
+        <div class="work-anim">${p.job.e}</div>
+        <h3>${p.job.n}</h3>
+        <p>Salário: R$ ${p.job.s.toLocaleString()}</p>
+        <hr style="opacity:0.1; margin:15px">
+        <button class="btn-opt" style="background:#e67e22" onclick="faltar()">🚪 Faltar ao Serviço</button>
+        <button class="btn-opt" style="background:#c0392b" onclick="p.job=null; fecharModal(); addLog('Pediu demissão.')">🚶 Pedir Demissão</button>
+    `);
+}
+
+function abrirAtividades() {
     let h = `
-        <button class="btn-opt btn-insta" onclick="menuRede('instagram')">📸 Instagram ${p.redes.instagram.ativa ? `(${p.redes.instagram.seguidores})` : '(Criar)'}</button>
-        <button class="btn-opt btn-tiktok" onclick="menuRede('tiktok')">📱 TikTok ${p.redes.tiktok.ativa ? `(${p.redes.tiktok.seguidores})` : '(Criar)'}</button>
-        <button class="btn-opt" onclick="fecharModal(); p.stats.fel+=10; addLog('Tempo com a família.')">👨‍👩‍👧 Família</button>
+        <button class="btn-opt" onclick="abrirEducacao()">🎓 Faculdade / Cursos</button>
+        <button class="btn-opt" onclick="p.stats.int+=10; fecharModal(); addLog('Estudou na biblioteca.')">📖 Biblioteca (Grátis)</button>
+        <button class="btn-opt" onclick="p.stats.sau+=10; p.grana-=50; fecharModal(); addLog('Fez academia.')">🏋️ Academia (R$ 50)</button>
     `;
-    abrirModal("SOCIAL", h);
+    abrirModal("ATIVIDADES", h);
 }
 
-function menuRede(r) {
-    if (!p.redes[r].ativa) {
-        abrirModal(r, `<button class="btn-opt" onclick="p.redes['${r}'].ativa=true; fecharModal(); addLog('Criou conta no ${r}')">✅ Criar Conta</button>`);
-    } else {
-        abrirModal(r, `
-            <p>Seguidores: ${p.redes[r].seguidores}</p>
-            <button class="btn-opt" onclick="postar('${r}','selfie')">🤳 Selfie</button>
-            <button class="btn-opt" onclick="postar('${r}','dança')">💃 Dança</button>
-            <button class="btn-opt" onclick="postar('${r}','polêmica')">☣️ Polêmica</button>
-        `);
-    }
-}
-
-function postar(r, t) {
-    if (p.redes[r].posts > 3) return alert("Limite anual!");
-    let ganho = Math.floor(Math.random() * (p.stats.apa + 10));
-    if (t == 'polêmica') ganho = Math.random() > 0.5 ? ganho * 5 : -100;
-    if (Math.random() > 0.95) { ganho *= 10; addLog("🚀 VIRALIZOU!", "gold"); }
-    
-    p.redes[r].seguidores = Math.max(0, p.redes[r].seguidores + ganho);
-    p.redes[r].posts++;
-    addLog(`📱 ${r}: Postou ${t} (${ganho} seg.)`);
-    fecharModal();
-}
-
-// --- SISTEMA DE VIDAS ---
-function abrirAtivos() {
-    let saves = JSON.parse(localStorage.getItem('bit_saves') || "[]");
-    let h = `<h3>Dinheiro: R$ ${p.grana.toLocaleString()}</h3>
-             <button class="btn-opt" style="background:#3498db" onclick="novaVida()">+ Nova Vida</button>
-             <div style="margin-top:10px">`;
-    saves.forEach(s => {
-        h += `<div style="display:flex; justify-content:space-between; background:#2d3640; padding:10px; margin-bottom:5px; border-radius:10px">
-                <span>${s.nome} (${s.idade}a)</span>
-                <button onclick="carregarVida(${s.id})" style="background:green; color:white; border:none; padding:5px 10px; border-radius:5px">Carregar</button>
-              </div>`;
-    });
-    h += `</div>`;
-    abrirModal("ATIVOS / VIDAS", h);
-}
-
-function carregarVida(id) {
-    let saves = JSON.parse(localStorage.getItem('bit_saves'));
-    p = saves.find(s => s.id === id);
-    document.getElementById('event-log').innerHTML = "";
-    fecharModal();
-}
-
-function novaVida() {
-    salvar();
-    p = NOVO_PERSONAGEM(prompt("Nome do Personagem:") || "Carlos");
-    document.getElementById('event-log').innerHTML = "";
-    fecharModal();
-}
-
-function salvar() {
-    let saves = JSON.parse(localStorage.getItem('bit_saves') || "[]");
-    const idx = saves.findIndex(s => s.id === p.id);
-    if (idx !== -1) saves[idx] = p; else saves.push(p);
-    localStorage.setItem('bit_saves', JSON.stringify(saves));
-    localStorage.setItem('bit_curr', JSON.stringify(p));
-}
-
-// --- ENGINE ---
+// --- SISTEMA CORE ---
 function envelhecer() {
     p.idade++;
     if (p.job) p.grana += p.job.s;
     p.redes.instagram.posts = 0;
     p.redes.tiktok.posts = 0;
-    addLog("Mais um ano se passou.");
-    salvar();
+    addLog("Mais um ano passou.");
     update();
 }
 
@@ -172,12 +174,17 @@ function update() {
     document.getElementById('bar-looks').style.width = p.stats.apa + "%";
 }
 
-function abrirAtividades() {
-    abrirModal("ROTINA", `<button class="btn-opt" onclick="p.stats.sau+=10; fecharModal(); addLog('Academia feita.')">🏋️ Academia (Gratis)</button>`);
+function abrirModal(t, h) {
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('modal-title').innerText = t;
+    document.getElementById('m-content').innerHTML = h;
 }
 
-window.onload = () => {
-    const curr = localStorage.getItem('bit_curr');
-    if (curr) p = JSON.parse(curr);
-    update();
-};
+function fecharModal() { document.getElementById('modal').style.display = 'none'; update(); }
+
+function addLog(m, c = "#fff") {
+    const log = document.getElementById('event-log');
+    log.insertAdjacentHTML('afterbegin', `<div class="log-item" style="border-left:4px solid ${c}"><b>Ano ${p.idade}</b>: ${m}</div>`);
+}
+
+window.onload = update;
