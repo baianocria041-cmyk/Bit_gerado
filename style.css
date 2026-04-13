@@ -3,91 +3,138 @@
     --card-bg: #1e252d;
     --primary: #4cd137;
     --text: #ffffff;
+    --danger: #e74c3c;
+    --blue: #3498db;
+    --gold: #f1c40f;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+/* 1. RESET PARA MODO APP */
+* { 
+    margin: 0; padding: 0; box-sizing: border-box; 
+    font-family: 'Segoe UI', sans-serif;
+    user-select: none; -webkit-tap-highlight-color: transparent;
+}
 
-body { background: #000; color: var(--text); height: 100vh; overflow: hidden; }
+html, body { 
+    width: 100%; height: 100%; 
+    overflow: hidden; background: #000;
+    position: fixed; /* Evita que a tela suba ao clicar nos botões */
+}
 
 #game-container {
     width: 100%; max-width: 500px; height: 100vh; margin: auto;
     background: var(--bg-dark); display: flex; flex-direction: column;
 }
 
-/* TOP STATUS */
-header { padding: 15px; background: #1a2027; border-bottom: 2px solid #2d3640; }
-.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.stat span { font-size: 10px; font-weight: bold; color: #aab0b8; }
-.bar { background: #333; height: 12px; border-radius: 6px; margin-top: 4px; border: 1px solid #444; }
-.bar div { height: 100%; border-radius: 6px; transition: 0.3s; }
-
-#bar-happy { background: #2ecc71; box-shadow: 0 0 10px #2ecc7155; }
-#bar-health { background: #e74c3c; box-shadow: 0 0 10px #e74c3c55; }
-#bar-smart { background: #3498db; box-shadow: 0 0 10px #3498db55; }
-#bar-looks { background: #f1c40f; box-shadow: 0 0 10px #f1c40f55; }
-
-header h1 { text-align: center; color: var(--primary); font-size: 32px; margin-top: 10px; }
-
-/* LOG MIDDLE */
-#event-log { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column-reverse; gap: 12px; }
-
-.log-item { background: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid #2d3640; line-height: 1.4; }
-
-/* TINDER CARD (Igual a imagem) */
-.tinder-card {
-    border: 2px solid #e67e22; border-radius: 15px; padding: 15px; text-align: center; margin-top: 10px;
-}
-.tinder-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-.btn-like { background: #2ecc71; padding: 10px; border: none; border-radius: 20px; color: #fff; font-weight: bold; }
-.btn-dislike { background: #e74c3c; padding: 10px; border: none; border-radius: 20px; color: #fff; font-weight: bold; }
-
-/* FOOTER FIXED */
-footer { padding-bottom: 20px; background: #1a2027; }
-.player-info { text-align: center; padding: 10px; font-size: 13px; color: #888; border-top: 1px solid #2d3640; }
-
-.main-menu {
-    display: flex; justify-content: space-around; align-items: center; padding: 0 10px;
+/* 2. HEADER: BARRAS DE STATUS */
+header { 
+    padding: 15px; background: #1a2027; 
+    border-bottom: 2px solid #2d3640; flex-shrink: 0; 
 }
 
-.main-menu button {
-    background: #2c3e50; border: none; color: #fff; border-radius: 12px;
-    width: 18%; padding: 8px 0; font-size: 9px; cursor: pointer;
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.stat span { font-size: 10px; font-weight: bold; color: #aab0b8; letter-spacing: 1px; }
+
+.bar { 
+    background: #333; height: 12px; border-radius: 6px; 
+    margin-top: 3px; border: 1px solid #444; overflow: hidden; 
 }
-/* Adicione ao seu style.css existente */
+
+.bar div { height: 100%; transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+#bar-happy { background: var(--primary); box-shadow: 0 0 10px rgba(76, 209, 55, 0.3); }
+#bar-health { background: var(--danger); box-shadow: 0 0 10px rgba(231, 76, 60, 0.3); }
+#bar-smart { background: var(--blue); box-shadow: 0 0 10px rgba(52, 152, 219, 0.3); }
+#bar-looks { background: var(--gold); box-shadow: 0 0 10px rgba(241, 196, 15, 0.3); }
+
+header h1 { 
+    text-align: center; color: var(--primary); 
+    font-size: 32px; margin-top: 10px; font-weight: 800;
+}
+
+/* 3. MIDDLE: LOG DE EVENTOS (ONDE O JOGO ROLA) */
+#event-log { 
+    flex: 1; overflow-y: auto; padding: 15px;
+    display: flex; flex-direction: column-reverse; gap: 12px;
+    background: radial-gradient(circle at top, #1e252d 0%, #12171d 100%);
+}
+
+.log-item { 
+    background: var(--card-bg); padding: 15px; border-radius: 12px; 
+    border: 1px solid #2d3640; border-left: 5px solid #2d3640;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* 4. FOOTER: BOTÕES FIXOS */
+footer { 
+    background: #1a2027; flex-shrink: 0; 
+    padding-bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid #2d3640;
+}
+
+.player-info { 
+    text-align: center; padding: 10px; font-size: 13px; 
+    color: #888; border-bottom: 1px solid #2d3640; 
+}
+
+.main-menu { 
+    display: flex; justify-content: space-around; 
+    align-items: center; padding: 10px; height: 90px;
+}
+
+.main-menu button { 
+    background: #2c3e50; border: none; color: #fff; 
+    border-radius: 12px; width: 18%; height: 55px;
+    font-size: 9px; font-weight: bold; cursor: pointer;
+}
+
+.btn-age-container { 
+    text-align: center; width: 22%; display: flex; 
+    flex-direction: column; align-items: center;
+}
+
+.btn-age { 
+    background: var(--primary) !important; color: #fff !important; 
+    font-size: 35px !important; width: 65px !important; height: 65px !important; 
+    border-radius: 50% !important; margin-top: -35px; 
+    border: 4px solid var(--bg-dark) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.btn-age-container small { 
+    font-size: 8px; font-weight: bold; color: var(--primary); margin-top: 5px; 
+}
+
+/* 5. MODAL E MENUS DE OPÇÕES */
+.modal { 
+    display: none; position: fixed; inset: 0; 
+    background: rgba(0,0,0,0.9); z-index: 1000; 
+    align-items: center; justify-content: center; padding: 20px;
+}
+
+.modal-content { 
+    background: var(--card-bg); width: 100%; max-width: 400px; 
+    padding: 20px; border-radius: 20px; border: 1px solid #444;
+}
+
 .btn-opt {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 8px;
-    background: #2c3e50;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
+    width: 100%; padding: 15px; margin-bottom: 10px;
+    background: #2c3e50; color: white; border: none;
+    border-radius: 10px; font-weight: bold; font-size: 14px;
 }
 
-.btn-opt:active { background: #34495e; }
-
-/* Para a lista de ativos não bugar */
-#m-content {
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-
-.btn-age-container { text-align: center; width: 22%; }
-.btn-age {
-    background: var(--primary) !important; color: #fff !important; font-size: 30px !important;
-    width: 60px !important; height: 60px !important; border-radius: 50% !important; margin-bottom: 5px;
-}
-.btn-age-container small { font-size: 8px; font-weight: bold; color: var(--primary); }
-
-/* MODAL */
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
-.modal-content { background: var(--card-bg); width: 90%; max-width: 400px; padding: 20px; border-radius: 20px; text-align: center; }
-.btn-close { margin-top: 15px; background: #555; border: none; color: #fff; padding: 10px 20px; border-radius: 10px; }
-
+/* 6. ANIMAÇÃO DO MINIGAME */
 @keyframes moveBar {
     from { left: 0%; }
-    to { left: 90%; }
+    to { left: 92%; }
 }
+
+/* 7. SCROLLBAR CUSTOMIZADA (ESTILO APP) */
+#event-log::-webkit-scrollbar { width: 4px; }
+#event-log::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
